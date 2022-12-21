@@ -1,0 +1,7 @@
+<h1>TEST</h1>
+<mat-form-field appearance="fill">
+  <mat-label>Select</mat-label>
+  <mat-select>
+    <mat-option *ngFor="let item of professionsList" value={{item.profession}}>{{item.profession}}</mat-option>
+  </mat-select>
+</mat-form-field>
