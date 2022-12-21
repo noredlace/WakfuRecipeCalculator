@@ -1,7 +1,82 @@
-<h1>TEST</h1>
-<mat-form-field appearance="fill">
-  <mat-label>Select</mat-label>
-  <mat-select>
-    <mat-option *ngFor="let item of professionsList" value={{item.profession}}>{{item.profession}}</mat-option>
-  </mat-select>
+
+<mat-toolbar class = "header">
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+   <mat-icon>menu</mat-icon>
+ </button>
+ <span>My App</span>
+ <span class="example-spacer"></span>
+ <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+   <mat-icon>favorite</mat-icon>
+ </button>
+ <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+  <mat-icon>share</mat-icon>
+</button>
+</mat-toolbar>
+
+
+
+<mat-card class="cards">
+  <mat-card-content>Profession</mat-card-content>
+  <mat-form-field appearance="fill">
+    <mat-label>Select</mat-label>
+    <mat-select (selectionChange)="getRecipesForProfession($event.value, recipeMinLevel, recipeMaxLevel)">
+      <mat-option *ngFor="let item of professionsList" value={{item.profession}}>{{item.profession}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-card>
+
+<mat-card class="cards">
+  <mat-card-content>Levels</mat-card-content>
+
+    <input id="RecipeMinLevel" matInput type="number" placeholder="0">
+
+  <mat-label> - </mat-label>
+
+    <input id="RecipeMaxLevel" matInput type="number" placeholder="230">
+
+</mat-card>
+
+<mat-card class="cards">
+  <mat-card-content>Item</mat-card-content>
+  <mat-form-field appearance="fill">
+    <mat-label>Select</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let item of recipesList" value={{item.ItemID}}>{{item.Name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Quantity</mat-label>
+  <input id="RecipeQuantity" matInput type="number" placeholder="0">
 </mat-form-field>
+</mat-card>
+
+
+<mat-card class="cards">
+  <div class="example-button-row">
+    <button mat-raised-button color="primary">Submit</button>
+    </div>
+</mat-card>
+
+<!--
+<mat-card class="cards">
+  <table mat-table border="1" class="table">
+    <tr>
+    <td>Select</td>
+    <td>Quantity</td>
+    <td>Name</td>
+    <td>ItemID</td>
+    <td>Image</td>
+    <td>Level</td>
+    </tr>
+    <tr *ngFor="let item of recipesList">
+      <td><mat-checkbox class="checkbox"></mat-checkbox></td>
+      <td><input id="QuantityOutput" matInput type="number" placeholder="0"></td>
+      <td>{{item.Name}}</td>
+      <td>{{item.ItemID}}</td>
+      <td><img src={{item.ImageURL}}></td>
+      <td>{{item.Level}}</td>
+      </tr>
+  </table>
+</mat-card>
+-->
