@@ -19,6 +19,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { CdkTableModule } from '@angular/cdk/table';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -43,7 +46,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatInputModule,
     MatCheckboxModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    CdkTableModule,
+    MatAutocompleteModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
