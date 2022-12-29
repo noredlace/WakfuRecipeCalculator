@@ -3,6 +3,7 @@
 body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   margin: 0;
+  background-color: gray;
 }
 
 html, body {
@@ -37,5 +38,9 @@ html, body {
 }
 
 .example-full-width {
+  width: 100%;
+}
+
+.btnSubmit {
   width: 100%;
 }

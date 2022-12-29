@@ -3,9 +3,9 @@ import { ProfessionModel } from './model/profession-model.model';
 import { ProfessionsService } from './service/professions.service';
 import { RecipesService } from './service/recipes.service';
 import { AfterViewInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { RecipeModel } from './model/recipe-model.model';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 
 type RecipeIngredient = {
@@ -89,7 +89,7 @@ export class AppComponent{
   //Submit Checked Row to query for all Recipes/SubRecipes
   btnSubmit(){
     //Need to get Quantity and RecipeID
-    var recipeQuantity = (<HTMLInputElement>document.getElementsByClassName("mat-checkbox-checked")[0]?.parentElement?.parentElement?.children[1]?.children[0]).value;
+    var recipeQuantity = (<HTMLInputElement>document.getElementsByClassName("mat-mdc-checkbox-checked")[0]?.parentElement?.parentElement?.children[1]?.children[0]).value;
     if (recipeQuantity == "")
     {
       recipeQuantity = "0";
@@ -97,15 +97,17 @@ export class AppComponent{
 
     this.recipeQuantity = parseInt(recipeQuantity);
 
-    var recipeID = (<HTMLInputElement>document.getElementsByClassName("mat-checkbox-checked")[0]?.parentElement?.parentElement?.children[3]).innerText;
+    var recipeID = (<HTMLInputElement>document.getElementsByClassName("mat-mdc-checkbox-checked")[0]?.parentElement?.parentElement?.children[3]).innerText;
 
-    var recipeName = (<HTMLInputElement>document.getElementsByClassName("mat-checkbox-checked")[0]?.parentElement?.parentElement?.children[2]).innerText;
+    var recipeName = (<HTMLInputElement>document.getElementsByClassName("mat-mdc-checkbox-checked")[0]?.parentElement?.parentElement?.children[2]).innerText;
 
     var recipeIngredients: RecipeIngredient[] = [{Name: recipeName, ParentItemID: recipeID, ItemID: recipeID, Quantity: parseInt("1"), BaseIngredient: "0"}];
 
     this.recipeIngredients = this.searchRecipes(recipeID, recipeIngredients);
 
     console.log(this.recipeIngredients);
+
+    console.log(this.allRecipesList);
   }
 
   //Recursive Function to search for all subRecipes

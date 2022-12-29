@@ -7,7 +7,7 @@
   >
     <mat-icon>menu</mat-icon>
   </button>
-  <span>My App</span>
+  <span>Wakfu Recipe Calculator</span>
   <span class="example-spacer"></span>
   <button
     mat-icon-button
@@ -30,7 +30,7 @@
   <mat-form-field appearance="fill">
     <mat-label>Select</mat-label>
     <mat-select
-      [(ngModel)]="professionName"
+      [(value)]="professionName"
       (selectionChange)="getRecipesForProfession()"
     >
       <mat-option
@@ -55,7 +55,7 @@
           matInput
           type="number"
           placeholder="0"
-          value="0"
+          value=""
         />
       </mat-form-field>
     </td>
@@ -69,7 +69,7 @@
           matInput
           type="number"
           placeholder="230"
-          value="230"
+          value=""
         />
       </mat-form-field>
     </td>
@@ -77,6 +77,7 @@
 </mat-card>
 
 <mat-card class="cards">
+  <mat-card-content>
   <mat-form-field>
     <mat-label>Filter Recipe Name</mat-label>
     <input
@@ -97,7 +98,7 @@
     <ng-container matColumnDef="qty">
       <th mat-header-cell *matHeaderCellDef>Qty</th>
       <td mat-cell *matCellDef>
-        <input id="RecipeQuantity" matInput type="number" placeholder="0" />
+        <input id="RecipeQuantity" type="number" matInput placeholder="0" />
       </td>
     </ng-container>
 
@@ -150,10 +151,11 @@
   </mat-paginator>
 
   <div class="example-button-row">
-    <button mat-raised-button color="primary" (click)="btnSubmit()">
+    <button mat-raised-button color="primary" class="btnSubmit" (click)="btnSubmit()">
       Submit
     </button>
   </div>
+</mat-card-content>
 </mat-card>
 
 <mat-card class="cards" *ngIf="recipeIngredients">
