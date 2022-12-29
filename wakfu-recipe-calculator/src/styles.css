@@ -1,9 +1,46 @@
+@import "~@angular/material/prebuilt-themes/pink-bluegrey.css";
+
 body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   margin: 0;
-  padding: 30px;
+  background-color: gray;
 }
 
 html, body {
   height: 100%;
+}
+
+.body {
+  width: 100%;
+}
+
+.header {
+  width: 100%;
+  flex-shrink: 0;
+  flex-grow: 0;
+  opacity: .5;
+}
+
+.cards {
+  width: 100%;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+.table {
+  width: 100%;
+}
+
+.example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.btnSubmit {
+  width: 100%;
 }
