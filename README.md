@@ -23,7 +23,9 @@ See the Scraper at [Github Repo](https://github.com/noredlace/wakfu-recipe-scrap
 
 Command from Unraid: 
 
-`docker run -d --name='wakfu-recipe-calculator' --net='bridge' -e TZ="America/Chicago" -e HOST_OS="Unraid" -p '9898:80/tcp' 'noredlace/wakfu-recipe-calculator'`
+```
+docker run -d --name='wakfu-recipe-calculator' --net='bridge' -e TZ="America/Chicago" -e HOST_OS="Unraid" -p '9898:80/tcp' 'noredlace/wakfu-recipe-calculator'
+```
 
 
 ## Sample Site Preview
