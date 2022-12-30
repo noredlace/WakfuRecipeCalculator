@@ -41,6 +41,12 @@ export class AppComponent{
   displayedColumns: string[] = ['select','qty','recipename','recipeid','recipeingredients','recipetype','recipelevel'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  //Stores the Filtered Name for the DataSource Table
+  recipeName: any;
+
+  //Stores the Quantity from the Datasource Table
+  recipeQuantity: any;
+
   //Stores the Selected Profession Name from the Select Dropdown
   professionName: any;
 
@@ -48,23 +54,22 @@ export class AppComponent{
   recipeMinLevel: any;
   recipeMaxLevel: any;
 
-  //Stores the Filtered Name for the DataSource Table
-  recipeName: any;
-
-  //Stores the Quantity from the Datasource Table
-  recipeQuantity: any;
-
   //This is the Built Ingredient List made after Submission that contains all the calculated resources
   recipeIngredients: any;
 
+  //This is a List of the Base (NonCraftable) Ingredients
+  //This is different than recipeIngredients in that this will add any duplicate elements together
+  baseRecipeIngredients: any;
+
 
   //Get DropDown List and All Recipes
-  constructor(private professions:ProfessionsService, private recipes:RecipesService){
+  constructor(private professions:ProfessionsService, private recipes:RecipesService)
+  {
     //Get Professions Dropdown List from API
     this.professions.getProfessionList().subscribe(professionData => {
       this.professionsList = professionData;
 
-      //Get Recipes for Each Profession. This is to be used for
+      //Get Recipes for Each Profession. This is to be used for filtering for Child Recipes across all Professions
       this.professionsList.forEach((element: any) => {
         this.recipes.getRecipesList(element.profession).subscribe((recipeData : any) => {
           recipeData.forEach((recipe: any) => {
@@ -76,13 +81,16 @@ export class AppComponent{
   }
 
   //Generate Table of Recipes for Profession from Dropdown Selection
-  getRecipesForProfession(){
+  getRecipesForProfession()
+  {
     this.recipes.getRecipesList(this.professionName).subscribe(data =>
       {
+        //Filter the Data Source Table off of Level Range. Default to 0 to 999
         this.recipesList = data;
         var levelFilter = this.recipesList.filter((data: { Level: number; }) => data.Level >= (this.recipeMinLevel ?? 0) && data.Level <= (this.recipeMaxLevel ?? 999));
         this.recipesList = levelFilter;
 
+        //If Recipe Name Filter was provided, filter the Data Source Table
         if(typeof this.recipeName !== 'undefined')
         {
           var dynamicRegex = new RegExp(this.recipeName, "i");
@@ -101,11 +109,12 @@ export class AppComponent{
   }
 
   //Submit Checked Row to query for all Recipes/SubRecipes
-  submitOrder(){
+  submitOrder()
+  {
     //Need to get Quantity and RecipeID from the Table Rows Box
     //I'm stupid and there has to be a better way than Javascript Selectors...lol
     var recipeQuantity = (<HTMLInputElement>document.getElementsByClassName("mat-mdc-radio-checked")[0]?.parentElement?.parentElement?.children[1].children[0].children[0].children[1].children[0].children[0]).value;
-    if (recipeQuantity == "")
+    if (recipeQuantity == "" || undefined)
     {
       recipeQuantity = "0";
     }
@@ -122,13 +131,16 @@ export class AppComponent{
 
     this.recipeIngredients = this.searchRecipes(recipeID, this.recipeQuantity, recipeIngredients);
 
-    console.log(this.recipeIngredients);
+
+    this.baseRecipeIngredients = this.returnBaseIngredients(this.recipeIngredients);
+    //console.log(this.recipeIngredients);
 
     //console.log(this.allRecipesList);
   }
 
   //Recursive Function to search for all subRecipes
-  searchRecipes(recipeID:string, recipeQuantity:number, recipeIngredients:RecipeIngredient[]){
+  searchRecipes(recipeID:string, recipeQuantity:number, recipeIngredients:RecipeIngredient[])
+  {
 
     //Filter the All Recipes List for the RecipeID Provided
     var recipeFilter = this.allRecipesList.filter((data: { ItemID: string }) => data.ItemID == recipeID);
@@ -170,8 +182,37 @@ export class AppComponent{
 
       });
     }
-
     return recipeIngredients;
+  }
+
+  returnBaseIngredients(recipeIngredients:RecipeIngredient[])
+  {
+    var baseRecipeIngredients: RecipeIngredient[] = [];
+    recipeIngredients.forEach((el: any) => {
+      if (el.BaseIngredient == true)
+      {
+        var baseRecipeIngredientAdded = baseRecipeIngredients.filter((data: {ItemID: number}) => data.ItemID == el.ItemID);
+
+        if (baseRecipeIngredientAdded.length == 0)
+        {
+          baseRecipeIngredients.push(el);
+        }
+        else
+        {
+          for (var i = 0; i < baseRecipeIngredients.length; i++)
+          {
+            if(baseRecipeIngredients[i].ItemID == el.ItemID)
+            {
+              baseRecipeIngredients[i].RequiredQuantity = baseRecipeIngredients[i].RequiredQuantity + el.RequiredQuantity;
+            }
+          }
+        }
+      }
+    });
+    baseRecipeIngredients.sort((a, b) => a.Name.toLocaleUpperCase() < b.Name.toLocaleUpperCase() ? -1 : 1);
+
+    //console.log(baseRecipeIngredients);
+    return baseRecipeIngredients;
   }
 }
 
