@@ -10,9 +10,9 @@ To do this, we built a WebScraper separately from this Repo to get the Recipes o
 
 Then we stored the Recipes jsons we acquired into an API to call these json files
 
-## API through Docker
+## Express.js API
 
-[Github Repo](https://github.com/noredlace/express-noredlace)
+See the API at [Github Repo](https://github.com/noredlace/express-noredlace)
 
 [ProfessionsAPI Sample](https://express.noredlace.com/api/wakfu/professions)
 
