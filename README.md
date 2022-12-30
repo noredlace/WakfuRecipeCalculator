@@ -14,6 +14,8 @@ Then we stored the Recipes jsons we acquired into an API to call these json file
 
 [ChefRecipesAPI Sample](https://express.noredlace.com/api/wakfu/profession/chef)
 
+## Wakfu Recipe Scraper
+
 See the Scraper at [Github Repo](https://github.com/noredlace/wakfu-recipe-scraper)
 
 ## Docker
