@@ -21,3 +21,6 @@ Command from Unraid:
 
 `docker run -d --name='wakfu-recipe-calculator' --net='bridge' -e TZ="America/Chicago" -e HOST_OS="Unraid" -p '9898:80/tcp' 'noredlace/wakfu-recipe-calculator'`
 
+
+## Sample Site Preview
+![Alt Text](docs/images/SampleSitePreview.png)
