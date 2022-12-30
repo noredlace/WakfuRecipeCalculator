@@ -1,4 +1,3 @@
-<div class="body">
 <mat-toolbar class="header">
   <button
     mat-icon-button
@@ -26,142 +25,192 @@
 </mat-toolbar>
 
 <mat-card class="cards">
-  <mat-card-content>Profession</mat-card-content>
-  <mat-form-field appearance="fill">
-    <mat-label>Select</mat-label>
-    <mat-select
-      [(value)]="professionName"
-      (selectionChange)="getRecipesForProfession()"
-    >
-      <mat-option
-        *ngFor="let item of professionsList"
-        value="{{ item.profession }}"
-        >{{ item.profession }}</mat-option
-      >
-    </mat-select>
-  </mat-form-field>
-</mat-card>
+  <mat-card-content>
+    <mat-card-title>Profession</mat-card-title>
 
-<mat-card class="cards">
-  <mat-card-content>Levels</mat-card-content>
-  <table class="table">
-    <td>
-      <mat-form-field>
-        <mat-label>Minimum Recipe Level</mat-label>
-        <input
-          id="RecipeMinLevel"
-          [(ngModel)]="recipeMinLevel"
-          (change)="getRecipesForProfession()"
-          matInput
-          type="number"
-          placeholder="0"
-          value=""
-        />
-      </mat-form-field>
-    </td>
-    <td>
-      <mat-form-field>
-        <mat-label>Maximum Recipe Level</mat-label>
-        <input
-          id="RecipeMaxLevel"
-          [(ngModel)]="recipeMaxLevel"
-          (change)="getRecipesForProfession()"
-          matInput
-          type="number"
-          placeholder="230"
-          value=""
-        />
-      </mat-form-field>
-    </td>
-  </table>
+    <mat-form-field appearance="fill">
+      <mat-label>Select</mat-label>
+      <mat-select
+        [(value)]="professionName"
+        (selectionChange)="getRecipesForProfession()"
+      >
+        <mat-option
+          *ngFor="let item of professionsList"
+          value="{{ item.profession }}"
+          >{{ item.profession }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+
+    <mat-card-title>Levels</mat-card-title>
+    <mat-form-field>
+      <mat-label>Minimum Recipe Level</mat-label>
+      <input
+        id="RecipeMinLevel"
+        [(ngModel)]="recipeMinLevel"
+        (change)="getRecipesForProfession()"
+        matInput
+        type="number"
+        placeholder="0"
+        value=""
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Maximum Recipe Level</mat-label>
+      <input
+        id="RecipeMaxLevel"
+        [(ngModel)]="recipeMaxLevel"
+        (change)="getRecipesForProfession()"
+        matInput
+        type="number"
+        placeholder="230"
+        value=""
+      />
+    </mat-form-field>
+  </mat-card-content>
 </mat-card>
 
 <mat-card class="cards">
   <mat-card-content>
-  <mat-form-field>
-    <mat-label>Filter Recipe Name</mat-label>
-    <input
-      id="filterrecipename"
-      [(ngModel)]="recipeName"
-      (change)="getRecipesForProfession()"
-      matInput
-      placeholder="Recipe Name"
-    />
-  </mat-form-field>
+    <mat-card-title>Recipes</mat-card-title>
+    <mat-form-field>
+      <mat-label>Filter Recipe Name</mat-label>
+      <input
+        id="filterrecipename"
+        [(ngModel)]="recipeName"
+        (change)="getRecipesForProfession()"
+        matInput
+        placeholder="Filter Recipe Name"
+      />
+      <mat-autocomplete>
+        <mat-option *ngFor="let item of recipesListDataSource.data" [value]="item.Name">
+          {{item.Name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
 
-  <table class="table" mat-table [dataSource]="recipesListDataSource">
-    <ng-container matColumnDef="select">
-      <th mat-header-cell *matHeaderCellDef>Select</th>
-      <td mat-cell *matCellDef><mat-checkbox></mat-checkbox></td>
-    </ng-container>
+    <table class="table" mat-table [dataSource]="recipesListDataSource">
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>Select</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-radio-button id="{{row.ItemID}}" name="radioSelect"></mat-radio-button>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="qty">
-      <th mat-header-cell *matHeaderCellDef>Qty</th>
-      <td mat-cell *matCellDef>
-        <input id="RecipeQuantity" type="number" matInput placeholder="0" />
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="qty">
+        <th mat-header-cell *matHeaderCellDef>Qty</th>
+        <td mat-cell *matCellDef>
+          <mat-form-field>
+            <input id="RecipeQuantity" type="number" matInput placeholder="0" />
+          </mat-form-field>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="recipename">
-      <th mat-header-cell *matHeaderCellDef>Recipe Name</th>
-      <td mat-cell *matCellDef="let row">
-        <a href="{{ row.urlID }}">{{ row.Name }}</a>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="recipename">
+        <th mat-header-cell *matHeaderCellDef>Recipe Name</th>
+        <td mat-cell *matCellDef="let row">
+          <a href="{{ row.urlID }}">{{ row.Name }}</a>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="recipeid">
-      <th mat-header-cell *matHeaderCellDef>Recipe ID</th>
-      <td mat-cell *matCellDef="let row">{{ row.ItemID }}</td>
-    </ng-container>
+      <ng-container matColumnDef="recipeid">
+        <th mat-header-cell *matHeaderCellDef>Recipe ID</th>
+        <td mat-cell *matCellDef="let row">{{ row.ItemID }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="recipeingredients">
-      <th mat-header-cell *matHeaderCellDef>Ingredients</th>
-      <td mat-cell *matCellDef="let row">
-        <p *ngFor="let item of row.Recipe" id="{{ item.ItemID }}">
-          {{ item.qty }}:<a href="{{ item.urlID }}">{{ item.Name }}</a>
-        </p>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="recipeingredients">
+        <th mat-header-cell *matHeaderCellDef>Ingredients</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Expand Recipes
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="divFlex" *ngFor="let item of row.Recipe" id="{{ item.ItemID }}">
+              <p class="left">{{ item.qty }}x</p>
+              <p class="center"><a href="{{ item.urlID }}">{{ item.Name }}</a></p>
+              <p class="right">{{ item.ItemID }}</p>
+            </div>
+          </mat-expansion-panel>
+        </td>
+      </ng-container>
 
-    <!-- Blocked by Cloudflare on Ankama's Side
+<!---->
+
+      <!-- Blocked by Cloudflare on Ankama's Side
     <ng-container matColumnDef="recipeimage">
       <th mat-header-cell *matHeaderCellDef>Recipe Image</th>
       <td mat-cell *matCellDef="let row"> <img src="{{row.urlImage}}"> </td>
     </ng-container>
   -->
 
-    <ng-container matColumnDef="recipetype">
-      <th mat-header-cell *matHeaderCellDef>Type</th>
-      <td mat-cell *matCellDef="let row">{{ row.Type }}</td>
-    </ng-container>
+      <ng-container matColumnDef="recipetype">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let row">{{ row.Type }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="recipelevel">
-      <th mat-header-cell *matHeaderCellDef>Recipe Level</th>
-      <td mat-cell *matCellDef="let row">{{ row.Level }}</td>
-    </ng-container>
+      <ng-container matColumnDef="recipelevel">
+        <th mat-header-cell *matHeaderCellDef>Recipe Level</th>
+        <td mat-cell *matCellDef="let row">{{ row.Level }}</td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
-  <mat-paginator
-    [pageSizeOptions]="[5, 10, 20]"
-    showFirstLastButtons
-    aria-label="Select page of Recipes"
-  >
-  </mat-paginator>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator
+      [pageSizeOptions]="[5, 20, 50]"
+      showFirstLastButtons
+      aria-label="Select page of Recipes"
+    >
+    </mat-paginator>
 
-  <div class="example-button-row">
-    <button mat-raised-button color="primary" class="btnSubmit" (click)="btnSubmit()">
-      Submit
-    </button>
-  </div>
-</mat-card-content>
-</mat-card>
-
-<mat-card class="cards" *ngIf="recipeIngredients">
-  <mat-card-content *ngFor="let item of recipeIngredients">
-    {{recipeQuantity * item.Quantity}}x {{item.Name}}
+    <div class="example-button-row">
+      <button
+        mat-raised-button
+        color="primary"
+        class="submitOrder"
+        (click)="submitOrder()"
+      >
+        Submit
+      </button>
+    </div>
   </mat-card-content>
 </mat-card>
 
+<!--Lists out each Craftable Recipe with the Child Ingredients-->
+<div class="recipeCardsContainer" *ngIf="recipeIngredients">
+  <div class="recipeCardsDiv" *ngFor="let item of recipeIngredients">
+  <mat-card class="recipeCards" *ngIf="item.BaseIngredient == false">
+    <mat-card-content>
+      <mat-card-title
+        >{{ item.RequiredQuantity }}x <a href="{{item.ItemURL}}">{{ item.Name }}</a> {{ item.ItemID }}</mat-card-title
+      >
+      <mat-card-subtitle *ngFor="let childItem of recipeIngredients">
+        <div class="divFlex"
+          *ngIf="
+            item.ItemID == childItem.ParentItemID &&
+            childItem.ItemID != item.ItemID
+          "
+        >
+          <p class="left"> {{ childItem.RecipeQuantity }}x </p>
+          <p class="center"> <a href="{{childItem.ItemURL}}">{{ childItem.Name }}</a> </p>
+          <p class="right"> ({{childItem.ItemID}}) </p>
+        </div>
+      </mat-card-subtitle>
+    </mat-card-content>
+  </mat-card>
 </div>
+</div>
+
+  <!--Lists out the all Base Ingredients for the Entire Recipe-->
+  <mat-card class="cards" *ngIf="recipeIngredients">
+    <mat-card-content>
+      <mat-card-title>Overall Base Ingredients</mat-card-title>
+      <div *ngFor="let item of recipeIngredients">
+        <mat-card-subtitle *ngIf="item.BaseIngredient == true">
+          {{ item.RequiredQuantity }}x <a href="{{item.ItemURL}}">{{ item.Name }}</a> ({{item.ItemID}})
+        </mat-card-subtitle>
+      </div>
+    </mat-card-content>
+  </mat-card>
