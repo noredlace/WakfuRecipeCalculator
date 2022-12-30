@@ -10,8 +10,29 @@ html, body {
   height: 100%;
 }
 
+mat-card-title {
+  color: white;
+}
+
 .body {
   width: 100%;
+}
+
+.left {
+  text-align: left;
+}
+
+.center {
+  text-align: center;
+}
+
+.right {
+  text-align: right;
+}
+
+.divFlex {
+  display: flex;
+  justify-content: space-between;
 }
 
 .header {
@@ -22,9 +43,27 @@ html, body {
 }
 
 .cards {
-  width: 100%;
+  width: 99%;
   flex-shrink: 0;
   flex-grow: 0;
+  margin: auto;
+  margin-top: 5px;
+}
+
+.recipeCardsContainer {
+  width: 99%;
+  display: flex;
+  flex-flow: wrap;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.recipeCardsDiv {
+  display: flex;
+}
+
+.recipeCards {
+  margin:5px;
 }
 
 .table {
@@ -41,6 +80,36 @@ html, body {
   width: 100%;
 }
 
-.btnSubmit {
+.submitOrder {
   width: 100%;
+}
+
+a {
+  outline: none;
+  text-decoration: none;
+  padding: 2px 1px 0;
+  border-bottom: 1px solid;
+}
+
+a:link {
+  color: whitesmoke;
+}
+
+a:visited {
+  color: white;
+}
+
+a:focus {
+  border-bottom: 1px solid;
+  background: black;
+}
+
+a:hover {
+  border-bottom: 1px solid;
+  background: black;
+}
+
+a:active {
+  background: black;
+  color: black;
 }

@@ -8,4 +8,16 @@ To do this, we built a WebScraper separately from this Repo to get the Recipes o
 
 Then we stored the Recipes jsons we acquired into an API to call these json files
 
+[ProfessionsAPI Sample](https://express.noredlace.com/api/wakfu/professions)
+
+[ChefRecipesAPI Sample](https://express.noredlace.com/api/wakfu/profession/chef)
+
 Built in Angular
+
+## Docker
+[Docker Repo](https://hub.docker.com/repository/docker/noredlace/wakfu-recipe-calculator)
+
+Command from Unraid: 
+
+`docker run -d --name='wakfu-recipe-calculator' --net='bridge' -e TZ="America/Chicago" -e HOST_OS="Unraid" -p '9898:80/tcp' 'noredlace/wakfu-recipe-calculator'`
+
