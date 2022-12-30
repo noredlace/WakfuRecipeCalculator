@@ -1,4 +1,4 @@
 export class ProfessionModel {
-  public profession: string;
-  public modifiedDate: string;
+  public Profession: string;
+  public ModifiedDate: string;
 }

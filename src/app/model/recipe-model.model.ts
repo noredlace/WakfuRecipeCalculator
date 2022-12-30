@@ -1,15 +1,17 @@
 export class RecipeModel {
-  public urlID: string;
-  public ItemID: string;
-  public urlImage: string;
+  public ItemURL: string;
+  public ItemID: number;
+  public ItemImageURL: string;
   public Name: string;
   public Type: string;
   public Recipe: ChildRecipeModel;
-  public Level: string;
+  public Level: number;
 }
 
 export class ChildRecipeModel {
-  public urlID: string;
-  public urlImage: string;
-  public qty: string;
+  public ItemURL: string;
+  public ItemID: number;
+  public ItemImageURL: string;
+  public Name: string;
+  public Quantity: number;
 }

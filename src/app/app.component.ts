@@ -71,7 +71,7 @@ export class AppComponent{
 
       //Get Recipes for Each Profession. This is to be used for filtering for Child Recipes across all Professions
       this.professionsList.forEach((element: any) => {
-        this.recipes.getRecipesList(element.profession).subscribe((recipeData : any) => {
+        this.recipes.getRecipesList(element.Profession).subscribe((recipeData : any) => {
           recipeData.forEach((recipe: any) => {
              this.allRecipesList.push(recipe);
           });
@@ -125,11 +125,11 @@ export class AppComponent{
     var recipeObject = this.recipesListDataSource.data.filter((data: { ItemID: string }) => data.ItemID == recipeID);
 
     var recipeName = recipeObject[0].Name;
-    var recipeURL = recipeObject[0].urlID;
+    var recipeURL = recipeObject[0].ItemURL;
 
     var recipeIngredients: RecipeIngredient[] = [{Name: recipeName, ParentItemID: parseInt(recipeID), ItemID: parseInt(recipeID), ItemURL: recipeURL, RecipeQuantity: this.recipeQuantity, RequiredQuantity: this.recipeQuantity, BaseIngredient: false}];
 
-    this.recipeIngredients = this.searchRecipes(recipeID, this.recipeQuantity, recipeIngredients);
+    this.recipeIngredients = this.searchRecipes(parseInt(recipeID), this.recipeQuantity, recipeIngredients);
 
 
     this.baseRecipeIngredients = this.returnBaseIngredients(this.recipeIngredients);
@@ -139,11 +139,11 @@ export class AppComponent{
   }
 
   //Recursive Function to search for all subRecipes
-  searchRecipes(recipeID:string, recipeQuantity:number, recipeIngredients:RecipeIngredient[])
+  searchRecipes(recipeID:number, recipeQuantity:number, recipeIngredients:RecipeIngredient[])
   {
 
     //Filter the All Recipes List for the RecipeID Provided
-    var recipeFilter = this.allRecipesList.filter((data: { ItemID: string }) => data.ItemID == recipeID);
+    var recipeFilter = this.allRecipesList.filter((data: { ItemID: number }) => data.ItemID == recipeID);
 
     //Stop if the RecipeID provided is not found in the list
     if (recipeFilter.length == 0)
@@ -159,15 +159,15 @@ export class AppComponent{
       recipeFilter[0].Recipe.forEach( (el: any) => {
 
         //Determine if Child Ingredient is a Base Ingredient (a.k.a you cannot craft it)
-        var recipeIsBase = this.allRecipesList.filter((data: { ItemID: string }) => data.ItemID == el.ItemID);
+        var recipeIsBase = this.allRecipesList.filter((data: { ItemID: number }) => data.ItemID == el.ItemID);
 
         var recipeObject: RecipeIngredient = {
           Name: el.Name,
           ParentItemID: recipeFilter[0].ItemID,
           ItemID: el.ItemID,
-          ItemURL: el.urlID,
-          RecipeQuantity: parseInt((el.qty).replace("x","")),
-          RequiredQuantity: recipeQuantity * parseInt((el.qty).replace("x","")),
+          ItemURL: el.ItemURL,
+          RecipeQuantity: el.Quantity,
+          RequiredQuantity: recipeQuantity * el.Quantity,
           BaseIngredient: false
         };
 
@@ -178,7 +178,7 @@ export class AppComponent{
         }
 
         recipeIngredients.push(recipeObject);
-        this.searchRecipes(el.ItemID, recipeQuantity * parseInt((el.qty).replace("x","")), recipeIngredients);
+        this.searchRecipes(el.ItemID, recipeQuantity * el.Quantity, recipeIngredients);
 
       });
     }
