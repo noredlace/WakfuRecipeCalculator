@@ -204,11 +204,11 @@
 </div>
 
   <!--Lists out the all Base Ingredients for the Entire Recipe-->
-  <mat-card class="cards" *ngIf="recipeIngredients">
+  <mat-card class="cards" *ngIf="baseRecipeIngredients">
     <mat-card-content>
       <mat-card-title>Overall Base Ingredients</mat-card-title>
-      <div *ngFor="let item of recipeIngredients">
-        <mat-card-subtitle *ngIf="item.BaseIngredient == true">
+      <div *ngFor="let item of baseRecipeIngredients">
+        <mat-card-subtitle>
           {{ item.RequiredQuantity }}x <a href="{{item.ItemURL}}">{{ item.Name }}</a> ({{item.ItemID}})
         </mat-card-subtitle>
       </div>
