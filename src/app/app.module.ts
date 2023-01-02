@@ -23,6 +23,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 
 @NgModule({
@@ -52,7 +53,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatAutocompleteModule,
     MatRadioModule,
     MatExpansionModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
