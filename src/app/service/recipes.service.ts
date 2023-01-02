@@ -13,4 +13,10 @@ export class RecipesService {
       let apiURL = "https://express.noredlace.com/api/wakfu/profession/" + professionName
       return this.http.get(apiURL);
   }
+
+  getAllRecipes()
+  {
+    let apiURL = "https://express.noredlace.com/api/wakfu/recipes"
+    return this.http.get(apiURL);
+  }
 }

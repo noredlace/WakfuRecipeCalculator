@@ -8,6 +8,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
 
+
+//This is the list of Ingredients returned from submitting an Order
+//RecipeQuantity refers to the amount needed for the Parent Craft (a.k.a ItemA uses ItemB 5 times. RecipeQuantity = 5)
+//RequiredQuantity refers to the amount needed for the quantity ordered (a.k.a ItemA uses ItemB 5 times. We ordered 5 ItemA. RequiredQuantity = 25)
+//BaseIngredient refers to if an item is craftable or not. True = Not Craftable. False = Craftable
 type RecipeIngredient = {
   ItemID: number;
   ParentItemID: number;
@@ -27,14 +32,14 @@ export class AppComponent{
   title = 'wakfu-recipe-calculator';
 
   //Stores the API Return of all Available Professions. Used in Select Dropdown
-  professionsList: any;
+  professionList: any;
 
   //Stores the API Return of all Recipes of every Profession. Used to identify Recipes across Professions when needed
   //a.k.a if Jeweler a recipe uses a Miner recipe, we can reference this variable to find out the Recipe Guts of that
-  allRecipesList: any = [];
+  allRecipesList: any;
 
-  //Not sure if needed
-  recipesList: any;
+  //Stores the Recipes of the Selected Profession for rendering in the Data Table. Probably not needed as it should be identical to the recipesListDataSource.data
+  professionRecipesList: any;
 
   //Stores the API Return of the Recipe for the Selected Profession. Renders the Data Table
   recipesListDataSource = new MatTableDataSource<any>();
@@ -48,7 +53,7 @@ export class AppComponent{
   recipeQuantity: any;
 
   //Stores the Selected Profession Name from the Select Dropdown
-  professionName: any;
+  professionName: any = "All";
 
   //Stores the Input field of the Recipe Minimum and Maximum Levels
   recipeMinLevel: any;
@@ -61,51 +66,71 @@ export class AppComponent{
   //This is different than recipeIngredients in that this will add any duplicate elements together
   baseRecipeIngredients: any;
 
+  //This is a property to enforce the loading card if the Recipes aren't loaded yet (a.k.a first API call)
+  recipesPopulated: boolean = false;
 
   //Get DropDown List and All Recipes
-  constructor(private professions:ProfessionsService, private recipes:RecipesService)
+  constructor(private recipes:RecipesService)
   {
-    //Get Professions Dropdown List from API
-    this.professions.getProfessionList().subscribe(professionData => {
-      this.professionsList = professionData;
+    this.recipes.getAllRecipes().subscribe(recipeData => {
+      this.professionRecipesList = recipeData;
 
-      //Get Recipes for Each Profession. This is to be used for filtering for Child Recipes across all Professions
-      this.professionsList.forEach((element: any) => {
-        this.recipes.getRecipesList(element.Profession).subscribe((recipeData : any) => {
-          recipeData.forEach((recipe: any) => {
-             this.allRecipesList.push(recipe);
-          });
+      var professionList = ["All"];
+      var allRecipesList: any[] = [];
+
+      for (var professionName in recipeData)
+      {
+        professionList.push(professionName);
+
+        this.professionRecipesList[professionName].forEach((recipe: any) => {
+          allRecipesList.push(recipe);
         });
-      });
+      }
+
+      //Sort by Level ASC and then by Name ASC
+      allRecipesList.sort((a, b) => a.Level - b.Level || (a.Name.toLocaleUpperCase() < b.Name.toLocaleUpperCase() ? -1 : 1));
+
+      this.professionList = professionList;
+      this.allRecipesList = allRecipesList;
+
+      this.recipesListDataSource.paginator = this.paginator;
+      this.recipesListDataSource.data = allRecipesList;
+
+
+      this.recipesPopulated = true;
     });
   }
 
-  //Generate Table of Recipes for Profession from Dropdown Selection
   getRecipesForProfession()
   {
-    this.recipes.getRecipesList(this.professionName).subscribe(data =>
-      {
-        //Filter the Data Source Table off of Level Range. Default to 0 to 999
-        this.recipesList = data;
-        var levelFilter = this.recipesList.filter((data: { Level: number; }) => data.Level >= (this.recipeMinLevel ?? 0) && data.Level <= (this.recipeMaxLevel ?? 999));
-        this.recipesList = levelFilter;
+    var currentProfession = this.professionName
 
-        //If Recipe Name Filter was provided, filter the Data Source Table
-        if(typeof this.recipeName !== 'undefined')
-        {
-          var dynamicRegex = new RegExp(this.recipeName, "i");
+    var currentProfessionRecipes: any[] = [];
+    if(currentProfession == "All")
+    {
+      currentProfessionRecipes = this.allRecipesList;
+    }
+    else {
+      currentProfessionRecipes = this.professionRecipesList[currentProfession];
+    }
 
-          var nameFilter = this.recipesList.filter( (data: any) => {
-            return data.Name.match(dynamicRegex) !== null
-          });
+    var recipeFilter = currentProfessionRecipes.filter((data: { Level: number; }) => data.Level >= (this.recipeMinLevel ?? 0) && data.Level <= (this.recipeMaxLevel ?? 999));
 
-          this.recipesList = nameFilter;
-        }
+    //If Recipe Name Filter was provided, filter the Data Source Table
+    if(typeof this.recipeName !== 'undefined')
+    {
+      var dynamicRegex = new RegExp(this.recipeName, "i");
 
-        //Set the Datasource data and paginator of the Table
-        this.recipesListDataSource.data = this.recipesList;
-        this.recipesListDataSource.paginator = this.paginator;
+      var nameFilter = recipeFilter.filter( (data: any) => {
+        return data.Name.match(dynamicRegex) !== null
       });
+
+      recipeFilter = nameFilter;
+    }
+
+    //Set the Datasource data and paginator of the Table
+    this.recipesListDataSource.paginator = this.paginator;
+    this.recipesListDataSource.data = recipeFilter;
   }
 
   //Submit Checked Row to query for all Recipes/SubRecipes
@@ -131,11 +156,8 @@ export class AppComponent{
 
     this.recipeIngredients = this.searchRecipes(parseInt(recipeID), this.recipeQuantity, recipeIngredients);
 
-
     this.baseRecipeIngredients = this.returnBaseIngredients(this.recipeIngredients);
-    //console.log(this.recipeIngredients);
 
-    //console.log(this.allRecipesList);
   }
 
   //Recursive Function to search for all subRecipes
@@ -154,7 +176,6 @@ export class AppComponent{
     //Add the Recipe Details into the Array and recurse with those subRecipes
     else
     {
-      //console.log("Item " + recipeID + " has Children");
 
       recipeFilter[0].Recipe.forEach( (el: any) => {
 
@@ -185,6 +206,7 @@ export class AppComponent{
     return recipeIngredients;
   }
 
+  //Given a list of recipeIngredient, return all the Base Ingredients (nonCraftable) so we know how much to gather via resources/drops
   returnBaseIngredients(recipeIngredients:RecipeIngredient[])
   {
     var baseRecipeIngredients: RecipeIngredient[] = [];
@@ -211,7 +233,6 @@ export class AppComponent{
     });
     baseRecipeIngredients.sort((a, b) => a.Name.toLocaleUpperCase() < b.Name.toLocaleUpperCase() ? -1 : 1);
 
-    //console.log(baseRecipeIngredients);
     return baseRecipeIngredients;
   }
 }

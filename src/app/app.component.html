@@ -24,6 +24,14 @@
   </button>
 </mat-toolbar>
 
+<mat-card class="cards" *ngIf="!recipesPopulated">
+  <mat-card-content>
+    <mat-card-title>Loading...</mat-card-title>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </mat-card-content>
+</mat-card>
+
+
 <mat-card class="cards">
   <mat-card-content>
     <mat-card-title>Profession</mat-card-title>
@@ -35,9 +43,9 @@
         (selectionChange)="getRecipesForProfession()"
       >
         <mat-option
-          *ngFor="let item of professionsList"
-          value="{{ item.Profession }}"
-          >{{ item.Profession }}</mat-option
+          *ngFor="let item of professionList"
+          value="{{ item }}"
+          >{{ item }}</mat-option
         >
       </mat-select>
     </mat-form-field>
@@ -215,3 +223,4 @@
       </div>
     </mat-card-content>
   </mat-card>
+
